@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router'
 import store from '../../redux/store'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  addLanguageActionCreator,
+  changeLanguageActionCreator,
+} from '../../redux/language/languageActions'
 
 export const Header = () => {
   const navigate = useNavigate()
@@ -16,16 +20,10 @@ export const Header = () => {
 
   const menuClickHandler = (e) => {
     if (e.key === 'new') {
-      const action = {
-        type: 'add_language',
-        payload: { code: 'new_lang', name: '新语言' },
-      }
+      const action = addLanguageActionCreator('新语言', 'new_lang')
       store.dispatch(action)
     } else {
-      const action = {
-        type: 'change_language',
-        payload: e.key,
-      }
+      const action = changeLanguageActionCreator(e.key)
       store.dispatch(action)
     }
   }
