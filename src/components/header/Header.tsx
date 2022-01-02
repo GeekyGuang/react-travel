@@ -4,11 +4,28 @@ import { Layout, Typography, Input, Menu, Button, Dropdown } from 'antd'
 import { GlobalOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router'
 import store from '../../redux/store'
+import { useState } from 'react'
 
 export const Header = () => {
   const navigate = useNavigate()
   const storeState = store.getState()
-  console.log(storeState)
+  const [language, setLanguage] = useState(storeState.language)
+  const [languageList, setLanguageList] = useState(storeState.languageList)
+
+  const menuClickHandler = (e) => {
+    console.log(e)
+    const action = {
+      type: 'change_language',
+      payload: e.key,
+    }
+
+    store.dispatch(action)
+  }
+
+  store.subscribe(() => {
+    const newState = store.getState()
+    setLanguage(newState.language)
+  })
 
   return (
     <div className={styles['app-header']}>
@@ -19,14 +36,16 @@ export const Header = () => {
             style={{ marginLeft: 15 }}
             overlay={
               <Menu>
-                {storeState.languageList.map((l) => (
-                  <Menu.Item key={l.code}>{l.name}</Menu.Item>
+                {languageList.map((l) => (
+                  <Menu.Item key={l.code} onClick={menuClickHandler}>
+                    {l.name}
+                  </Menu.Item>
                 ))}
               </Menu>
             }
             icon={<GlobalOutlined />}
           >
-            {storeState.language === 'zh' ? '中文' : 'English'}
+            {language === 'zh' ? '中文' : 'English'}
           </Dropdown.Button>
           <Button.Group className={styles['button-group']}>
             <Button onClick={() => navigate('/register')}>注册</Button>
