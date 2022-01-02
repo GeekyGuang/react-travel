@@ -3,9 +3,12 @@ import styles from './Header.module.css'
 import { Layout, Typography, Input, Menu, Button, Dropdown } from 'antd'
 import { GlobalOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router'
+import store from '../../redux/store'
 
 export const Header = () => {
   const navigate = useNavigate()
+  const storeState = store.getState()
+  console.log(storeState)
 
   return (
     <div className={styles['app-header']}>
@@ -16,13 +19,14 @@ export const Header = () => {
             style={{ marginLeft: 15 }}
             overlay={
               <Menu>
-                <Menu.Item>中文</Menu.Item>
-                <Menu.Item>English</Menu.Item>
+                {storeState.languageList.map((l) => (
+                  <Menu.Item key={l.code}>{l.name}</Menu.Item>
+                ))}
               </Menu>
             }
             icon={<GlobalOutlined />}
           >
-            语言
+            {storeState.language === 'zh' ? '中文' : 'English'}
           </Dropdown.Button>
           <Button.Group className={styles['button-group']}>
             <Button onClick={() => navigate('/register')}>注册</Button>
