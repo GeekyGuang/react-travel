@@ -16,5 +16,13 @@ export default (state = defaultState, action) => {
     const newState = { ...state, language: action.payload }
     return newState
   }
+
+  if (action.type === 'add_language') {
+    const newState = {
+      ...state,
+      languageList: [...state.languageList, action.payload],
+    }
+    return newState
+  }
   return state
 }

@@ -22,9 +22,18 @@ export const Header = () => {
     store.dispatch(action)
   }
 
+  const addNewLanguage = () => {
+    const action = {
+      type: 'add_language',
+      payload: { code: 'new_lang', name: '新语言' },
+    }
+    store.dispatch(action)
+  }
+
   store.subscribe(() => {
     const newState = store.getState()
     setLanguage(newState.language)
+    setLanguageList(newState.languageList)
   })
 
   return (
@@ -41,6 +50,7 @@ export const Header = () => {
                     {l.name}
                   </Menu.Item>
                 ))}
+                <Menu.Item onClick={addNewLanguage}>添加语言</Menu.Item>
               </Menu>
             }
             icon={<GlobalOutlined />}
