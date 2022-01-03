@@ -8,44 +8,23 @@ import {
   addLanguageActionCreator,
   changeLanguageActionCreator,
 } from '../../redux/language/languageActions'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../redux/store'
-import { Dispatch } from 'redux'
 
-const mapStateToProps = (state: RootState) => {
-  return {
-    language: state.language,
-    languageList: state.languageList
-  }
-}
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    changeLanguage: (code: "zh" | "en") => {
-      const action = changeLanguageActionCreator(code);
-      dispatch(action);
-    },
-    addLanguage: (name: string, code: string) => {
-      const action = addLanguageActionCreator(name, code);
-      dispatch(action);
-    },
-  };
-};
-
-type PropsType = ReturnType<typeof mapStateToProps> & 
-  ReturnType<typeof mapDispatchToProps>; 
-
-const HeaderComponent:React.FC<PropsType> = (props) => {
+export const Header:React.FC = () => {
   const navigate = useNavigate()
-  const language = props.language 
-  const languageList = props.languageList
   const { t } = useTranslation()
+  const language = useSelector((state:RootState) => state.language)
+  const languageList = useSelector((state:RootState) => state.languageList)
+  const dispatch = useDispatch()
+
 
   const menuClickHandler = (e) => {
     if (e.key === 'new') {
-      props.addLanguage('新语言', 'new_lang')
+      dispatch(addLanguageActionCreator('新语言', 'new_lang'))
     } else {
-      props.changeLanguage(e.key)
+      dispatch(changeLanguageActionCreator(e.key))
     }
   }
 
@@ -113,5 +92,3 @@ const HeaderComponent:React.FC<PropsType> = (props) => {
     </div>
   )
 }
-
-export const Header = connect(mapStateToProps,mapDispatchToProps)(HeaderComponent)
