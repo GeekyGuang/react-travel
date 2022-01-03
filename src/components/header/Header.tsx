@@ -8,15 +8,14 @@ import {
   addLanguageActionCreator,
   changeLanguageActionCreator,
 } from '../../redux/language/languageActions'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../../redux/store'
+import { useSelector, useDispatch } from '../../redux/hooks'
 
 
 export const Header:React.FC = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const language = useSelector((state:RootState) => state.language)
-  const languageList = useSelector((state:RootState) => state.languageList)
+  const language = useSelector((state) => state.language)
+  const languageList = useSelector((state) => state.languageList)
   const dispatch = useDispatch()
 
 
