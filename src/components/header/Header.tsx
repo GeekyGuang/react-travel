@@ -3,36 +3,51 @@ import styles from './Header.module.css'
 import { Layout, Typography, Input, Menu, Button, Dropdown } from 'antd'
 import { GlobalOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router'
-import store from '../../redux/store'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   addLanguageActionCreator,
   changeLanguageActionCreator,
 } from '../../redux/language/languageActions'
+import { connect } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { Dispatch } from 'redux'
 
-export const Header = () => {
+const mapStateToProps = (state: RootState) => {
+  return {
+    language: state.language,
+    languageList: state.languageList
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    changeLanguage: (code: "zh" | "en") => {
+      const action = changeLanguageActionCreator(code);
+      dispatch(action);
+    },
+    addLanguage: (name: string, code: string) => {
+      const action = addLanguageActionCreator(name, code);
+      dispatch(action);
+    },
+  };
+};
+
+type PropsType = ReturnType<typeof mapStateToProps> & 
+  ReturnType<typeof mapDispatchToProps>; 
+
+const HeaderComponent:React.FC<PropsType> = (props) => {
   const navigate = useNavigate()
-  const storeState = store.getState()
-  const [language, setLanguage] = useState(storeState.language)
-  const [languageList, setLanguageList] = useState(storeState.languageList)
+  const language = props.language 
+  const languageList = props.languageList
   const { t } = useTranslation()
 
   const menuClickHandler = (e) => {
     if (e.key === 'new') {
-      const action = addLanguageActionCreator('新语言', 'new_lang')
-      store.dispatch(action)
+      props.addLanguage('新语言', 'new_lang')
     } else {
-      const action = changeLanguageActionCreator(e.key)
-      store.dispatch(action)
+      props.changeLanguage(e.key)
     }
   }
-
-  store.subscribe(() => {
-    const newState = store.getState()
-    setLanguage(newState.language)
-    setLanguageList(newState.languageList)
-  })
 
   return (
     <div className={styles['app-header']}>
@@ -98,3 +113,5 @@ export const Header = () => {
     </div>
   )
 }
+
+export const Header = connect(mapStateToProps,mapDispatchToProps)(HeaderComponent)
