@@ -15,44 +15,35 @@ import sideImage3 from '../../assets/images/sider_2019_02-04-2.png'
 
 import { withTranslation, WithTranslation } from 'react-i18next'
 import axios from 'axios'
+import {connect} from 'react-redux'
+import { RootState } from '../../redux/store'
+import { fetchRecommendProductsFailActionCreator, fetchRecommendProductsStartActionCreator, fetchRecommendProductsSuccessActionCreator } from '../../redux/recommendProducts/recommendProductsActions'
 
-interface State {
-  productList: any[],
-  loading: boolean,
-  error: string | null
-}
+// interface State {
+//   productList: any[],
+//   loading: boolean,
+//   error: string | null
+// }
 
-class HomePageComponent extends React.Component<WithTranslation, State> {
-  constructor(props){
-    super(props)
-    this.state = {
-      loading: true,
-      error: null,
-      productList: []
-    }
-  }
+type PropsType = WithTranslation 
+  & ReturnType<typeof mapStateToProps> 
+  & ReturnType<typeof mapDispatchToProps>
+
+class HomePageComponent extends React.Component<PropsType> {
 
   async componentDidMount(){
+    this.props.fetchStart()
     try {
       const {data} = await axios.get('/api/productCollections')
-      console.log(data)
-      this.setState({
-        loading: false,
-        error: null,
-        productList: data
-      })
+      this.props.fetchSuccess(data)
     }catch(error: any) {
-      this.setState({
-        error: error.message,
-        loading: false
-      })
+      this.props.fetchFail(error.message)
     }
-
   }
 
   render() {
     const { t } = this.props
-    const {productList, loading, error} = this.state
+    const {productList, loading, error} = this.props
     if(loading) {
       console.log('loading: true')
       return <Spin 
@@ -117,4 +108,26 @@ class HomePageComponent extends React.Component<WithTranslation, State> {
   }
 }
 
-export const HomePage = withTranslation()(HomePageComponent)
+const mapStateToProps = (state: RootState) => {
+  return {
+    loading: state.recommendProducts.loading,
+    error: state.recommendProducts.error,
+    productList: state.recommendProducts.productList
+  }
+} 
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchStart: () => {
+      dispatch(fetchRecommendProductsStartActionCreator())
+    },
+    fetchSuccess: (data) => {
+      dispatch(fetchRecommendProductsSuccessActionCreator(data))
+    },
+    fetchFail: (error: string) => {
+      dispatch(fetchRecommendProductsFailActionCreator(error))
+    }
+  }
+}
+
+export const HomePage = connect(mapStateToProps,mapDispatchToProps)(withTranslation()(HomePageComponent))
