@@ -17,7 +17,7 @@ import { withTranslation, WithTranslation } from 'react-i18next'
 import axios from 'axios'
 import {connect} from 'react-redux'
 import { RootState } from '../../redux/store'
-import { fetchRecommendProductsFailActionCreator, fetchRecommendProductsStartActionCreator, fetchRecommendProductsSuccessActionCreator } from '../../redux/recommendProducts/recommendProductsActions'
+import { getProductCollectionsActionCreator } from '../../redux/recommendProducts/recommendProductsActions'
 
 // interface State {
 //   productList: any[],
@@ -31,14 +31,9 @@ type PropsType = WithTranslation
 
 class HomePageComponent extends React.Component<PropsType> {
 
-  async componentDidMount(){
-    this.props.fetchStart()
-    try {
-      const {data} = await axios.get('/api/productCollections')
-      this.props.fetchSuccess(data)
-    }catch(error: any) {
-      this.props.fetchFail(error.message)
-    }
+  componentDidMount(){
+    this.props.getProductsCollection()
+    
   }
 
   render() {
@@ -118,14 +113,8 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStart: () => {
-      dispatch(fetchRecommendProductsStartActionCreator())
-    },
-    fetchSuccess: (data) => {
-      dispatch(fetchRecommendProductsSuccessActionCreator(data))
-    },
-    fetchFail: (error: string) => {
-      dispatch(fetchRecommendProductsFailActionCreator(error))
+    getProductsCollection: () => {
+      dispatch(getProductCollectionsActionCreator())
     }
   }
 }
