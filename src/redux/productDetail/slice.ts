@@ -15,17 +15,12 @@ const initialState: ProductDetailState = {
 }
 
 export const getProductDetail = createAsyncThunk(
-    'productDetailSlice/getProductDetail', // 命名空间
+    'productDetailSlice/getProductDetail', // type
     async (touristRouteId: string, thunkAPI) => {
-        thunkAPI.dispatch(productDetailSlice.actions.fetchStart())
-        try {
           const { data } = await axios.get(
             `/api/touristRoutes/${touristRouteId}`
           );
-          thunkAPI.dispatch(productDetailSlice.actions.fetchSuccess(data))
-        } catch (error:any) {
-          thunkAPI.dispatch(productDetailSlice.actions.fetchFail(error.message))
-        }
+          return data
     }
 )
 
@@ -34,16 +29,31 @@ export const productDetailSlice = createSlice({
     name: 'productDetail',
     initialState,
     reducers: {
-        fetchStart: (state) => {
+        // fetchStart: (state) => {
+        //     // return {...state, loading: true}
+        //     state.loading = true
+        // },
+        // fetchSuccess: (state, action) => {
+        //     state.loading = false
+        //     state.data = action.payload
+        //     state.error = null
+        // },
+        // fetchFail: (state, action: PayloadAction<string|null>) => {
+        //     state.error = action.payload
+        //     state.loading = false
+        // }
+    },
+    extraReducers: {
+        [getProductDetail.pending.type]: (state) => {
             // return {...state, loading: true}
             state.loading = true
         },
-        fetchSuccess: (state, action) => {
+        [getProductDetail.fulfilled.type]: (state, action) => {
             state.loading = false
             state.data = action.payload
             state.error = null
         },
-        fetchFail: (state, action: PayloadAction<string|null>) => {
+        [getProductDetail.rejected.type]: (state, action: PayloadAction<string|null>) => {
             state.error = action.payload
             state.loading = false
         }
