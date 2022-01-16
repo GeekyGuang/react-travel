@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Spin, Row, Col } from "antd";
+import { Spin, Row, Col,Anchor,Menu } from "antd";
 import styles from "./Detail.module.css";
 import { Header, Footer, ProductIntro } from "../../components";
 import { DatePicker, Space } from "antd";
@@ -71,7 +71,22 @@ export const DetailPage: React.FC = () => {
           </Row>
         </div>
         {/* 锚点菜单 */}
-        <div className={styles["product-detail-anchor"]}></div>
+        <Anchor className={styles["product-detail-anchor"]}>
+          <Menu mode="horizontal">
+            <Menu.Item key="1">
+              <Anchor.Link href="#feature" title="产品特色"></Anchor.Link>
+            </Menu.Item>
+            <Menu.Item key="3">
+              <Anchor.Link href="#fees" title="费用"></Anchor.Link>
+            </Menu.Item>
+            <Menu.Item key="4">
+              <Anchor.Link href="#notes" title="预订须知"></Anchor.Link>
+            </Menu.Item>
+            <Menu.Item key="5">
+              <Anchor.Link href="#comments" title="用户评价"></Anchor.Link>
+            </Menu.Item>
+          </Menu>
+        </Anchor>
         {/* 产品特色 */}
         <div id="feature" className={styles["product-detail-container"]}></div>
         {/* 费用 */}
