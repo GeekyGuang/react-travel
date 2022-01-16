@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Spin, Row, Col,Anchor,Menu, Divider, Typography } from "antd";
 import styles from "./Detail.module.css";
-import { Header, Footer, ProductIntro } from "../../components";
+import { Header, Footer, ProductIntro, ProductComments } from "../../components";
 import { DatePicker, Space } from "antd";
+import { commentMockData } from './mockup'
 
 const { RangePicker } = DatePicker;
 
@@ -117,8 +118,14 @@ export const DetailPage: React.FC = () => {
             style={{ margin: 50 }}
           ></div>
         </div>
-        {/* 商品评价*/}
-        <div id="comments" className={styles["product-detail-container"]}></div>
+        <div id="comments" className={styles["product-detail-container"]}>
+          <Divider orientation={"center"}>
+            <Typography.Title level={3}>用户评价</Typography.Title>
+          </Divider>
+          <div style={{ margin: 40 }}>
+            <ProductComments data={commentMockData} />
+          </div>
+        </div>
       </div>
       <Footer />
     </>
