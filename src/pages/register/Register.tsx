@@ -1,4 +1,11 @@
+import { UserLayout } from "../../layouts/userLayout"
+
+
 export const RegisterPage = (props) => {
-  console.log(props)
-  return <h1>注册页面</h1>
+  
+  return <>
+    <UserLayout>
+    <h1>注册页面</h1>
+    </UserLayout>
+  </>
 }

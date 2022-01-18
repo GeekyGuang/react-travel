@@ -19,6 +19,7 @@ import {connect} from 'react-redux'
 import { RootState } from '../../redux/store'
 import { getProductCollectionsActionCreator } from '../../redux/recommendProducts/recommendProductsActions'
 
+import {MainLayout} from '../../layouts/mainLayout'
 // interface State {
 //   productList: any[],
 //   loading: boolean,
@@ -58,8 +59,8 @@ class HomePageComponent extends React.Component<PropsType> {
     }
     return (
       <>
-        <Header />
-        <div className={styles['page-content']}>
+        
+        <MainLayout>
           <Row style={{ marginTop: 20 }}>
             <Col span={6}>
               <SideMenu />
@@ -96,8 +97,7 @@ class HomePageComponent extends React.Component<PropsType> {
             products={productList[2].touristRoutes}
           />
           <BusinessPartner />
-        </div>
-        <Footer />
+          </MainLayout>
       </>
     )
   }
