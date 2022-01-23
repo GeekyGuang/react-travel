@@ -11,6 +11,7 @@ import {
 import { useSelector, useDispatch } from '../../redux/hooks'
 import jwt_decode, { JwtPayload as DefaultJwtPayload } from 'jwt-decode'
 import { useEffect, useState } from 'react'
+import { userSlice } from '../../redux/user/slice'
 
 interface JwtPayload extends DefaultJwtPayload {
   username: string
@@ -37,6 +38,12 @@ export const Header: React.FC = () => {
     } else {
       dispatch(changeLanguageActionCreator(e.key))
     }
+  }
+
+  const onSignOut = () => {
+    dispatch(userSlice.actions.signOut())
+    navigate('/')
+    window.location.reload()
   }
 
   return (
@@ -67,7 +74,7 @@ export const Header: React.FC = () => {
                 <Typography.Text strong>{username}</Typography.Text>
               </span>
               <Button>{t('header.shoppingCart')}</Button>
-              <Button>{t('header.signOut')}</Button>
+              <Button onClick={onSignOut}>{t('header.signOut')}</Button>
             </Button.Group>
           ) : (
             <Button.Group className={styles['button-group']}>
