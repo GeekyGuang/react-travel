@@ -9,15 +9,27 @@ import {
   changeLanguageActionCreator,
 } from '../../redux/language/languageActions'
 import { useSelector, useDispatch } from '../../redux/hooks'
+import jwt_decode, { JwtPayload as DefaultJwtPayload } from 'jwt-decode'
+import { useEffect, useState } from 'react'
 
+interface JwtPayload extends DefaultJwtPayload {
+  username: string
+}
 
-export const Header:React.FC = () => {
+export const Header: React.FC = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const language = useSelector((state) => state.language.language)
   const languageList = useSelector((state) => state.language.languageList)
   const dispatch = useDispatch()
+  const [username, setUsername] = useState('')
+  const jwt = useSelector((state) => state.user.token)
 
+  useEffect(() => {
+    if (jwt !== null) {
+      setUsername(jwt_decode<JwtPayload>(jwt).username)
+    }
+  }, [jwt])
 
   const menuClickHandler = (e) => {
     if (e.key === 'new') {
@@ -48,14 +60,25 @@ export const Header:React.FC = () => {
           >
             {language === 'zh' ? '中文' : 'English'}
           </Dropdown.Button>
-          <Button.Group className={styles['button-group']}>
-            <Button onClick={() => navigate('/register')}>
-              {t('header.register')}
-            </Button>
-            <Button onClick={() => navigate('/signIn')}>
-              {t('header.signin')}
-            </Button>
-          </Button.Group>
+          {jwt ? (
+            <Button.Group className={styles['button-group']}>
+              <span>
+                {t('header.welcome')}
+                <Typography.Text strong>{username}</Typography.Text>
+              </span>
+              <Button>{t('header.shoppingCart')}</Button>
+              <Button>{t('header.signOut')}</Button>
+            </Button.Group>
+          ) : (
+            <Button.Group className={styles['button-group']}>
+              <Button onClick={() => navigate('/register')}>
+                {t('header.register')}
+              </Button>
+              <Button onClick={() => navigate('/signIn')}>
+                {t('header.signin')}
+              </Button>
+            </Button.Group>
+          )}
         </div>
       </div>
       <Layout.Header className={styles['main-header']}>
