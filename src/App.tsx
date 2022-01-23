@@ -1,6 +1,12 @@
 import styles from './App.module.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { HomePage, SignInPage, RegisterPage, DetailPage } from './pages'
+import {
+  HomePage,
+  SignInPage,
+  RegisterPage,
+  DetailPage,
+  ShoppingCart,
+} from './pages'
 
 function App() {
   return (
